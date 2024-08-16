@@ -12,13 +12,18 @@ class OrderHistoryPage:
         self.driver = driver
 
     def wait_for_load_order_card(self):
-        WebDriverWait(self.driver, 3).until(expected_conditions.visibility_of_element_located((OrderHistoryPageLocators.
-                                                                                               ORDER_CARD)))
+        WebDriverWait(self.driver, 3).until(
+            expected_conditions.visibility_of_element_located(
+                (OrderHistoryPageLocators.ORDER_CARD)
+            )
+        )
 
     @allure.step('Получить номер заказа в разделе "История заказов"')
     def get_order_history_order_number(self):
         self.wait_for_load_order_card()
-        order_number = self.driver.find_element(*OrderHistoryPageLocators.ORDER_NUMBER).text
+        order_number = self.driver.find_element(
+            *OrderHistoryPageLocators.ORDER_NUMBER
+        ).text
         return order_number
 
     @allure.step('Перейти в раздел "Лента заказов"')
@@ -27,9 +32,7 @@ class OrderHistoryPage:
 
     @allure.step('Проверить, что текущая страница - раздела "История заказов"')
     def check_current_url_order_history(self):
-        assert Helper(self.driver).get_current_url() == UrlConfig.domain + UrlConfig.order_history_path
-
-
-
-
-
+        assert (
+            Helper(self.driver).get_current_url()
+            == UrlConfig.domain + UrlConfig.order_history_path
+        )

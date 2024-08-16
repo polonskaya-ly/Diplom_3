@@ -33,7 +33,9 @@ class LoginPage:
         self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).click()
 
     def input_password_to_field(self):
-        self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(TestData.password)
+        self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(
+            TestData.password
+        )
 
     def set_password_to_field(self):
         self.click_password_field()
@@ -43,8 +45,11 @@ class LoginPage:
         self.driver.find_element(*LoginPageLocators.LOGIN_BUTTON).click()
 
     def wait_for_login_header_is_displayed(self):
-        WebDriverWait(self.driver, 3).until(expected_conditions.visibility_of_element_located((LoginPageLocators.
-                                                                                               ENTER_HEADER)))
+        WebDriverWait(self.driver, 3).until(
+            expected_conditions.visibility_of_element_located(
+                (LoginPageLocators.ENTER_HEADER)
+            )
+        )
 
     def click_constructor_button(self):
         self.driver.find_element(*LoginPageLocators.CONSTRUCTOR).click()
@@ -59,13 +64,7 @@ class LoginPage:
     @allure.step("Проверить, что текущая страница - страница для входа в аккаунт")
     def check_current_url_is_login(self):
         self.wait_for_login_header_is_displayed()
-        assert Helper(self.driver).get_current_url() == UrlConfig.domain + UrlConfig.login_path
-
-
-
-
-
-
-
-
-
+        assert (
+            Helper(self.driver).get_current_url()
+            == UrlConfig.domain + UrlConfig.login_path
+        )

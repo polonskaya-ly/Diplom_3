@@ -14,11 +14,11 @@ from .pages.reset_page import ResetPage
 from .url_config import UrlConfig
 
 
-@pytest.fixture(params= ['chrome', 'firefox'])
+@pytest.fixture(params=["chrome", "firefox"])
 def driver(request):
-    if request.param == 'chrome':
+    if request.param == "chrome":
         driver = webdriver.Chrome()
-    elif request.param == 'firefox':
+    elif request.param == "firefox":
         driver = webdriver.Firefox()
     driver.maximize_window()
     driver.get(UrlConfig.domain)
@@ -28,24 +28,24 @@ def driver(request):
 
 
 @pytest.fixture
-@allure.step('Перейти на страницу ввода нового пароля')
+@allure.step("Перейти на страницу ввода нового пароля")
 def get_reset_page(driver):
-        recovery_page = RecoveryPage(driver)
-        recovery_page.get_recovery_page()
-        recovery_page.set_email_to_field()
-        recovery_page.click_recovery_button()
-        reset_page = ResetPage(driver)
-        reset_page.wait_for_load_password_field()
+    recovery_page = RecoveryPage(driver)
+    recovery_page.get_recovery_page()
+    recovery_page.set_email_to_field()
+    recovery_page.click_recovery_button()
+    reset_page = ResetPage(driver)
+    reset_page.wait_for_load_password_field()
 
 
 @pytest.fixture
-def login(driver,email=TestData.email):
-        login_page = LoginPage(driver)
-        login_page.login(email)
+def login(driver, email=TestData.email):
+    login_page = LoginPage(driver)
+    login_page.login(email)
 
 
 @pytest.fixture
-@allure.step('Перейти в личный кабинет')
+@allure.step("Перейти в личный кабинет")
 def move_to_account(driver, login):
     main_page = MainPage(driver)
     main_page.click_account_button()
@@ -55,23 +55,23 @@ def move_to_account(driver, login):
 
 @pytest.fixture
 def get_login_page(driver):
-        login_page = LoginPage(driver)
-        login_page.get_login_page()
+    login_page = LoginPage(driver)
+    login_page.get_login_page()
 
 
 @pytest.fixture
 def get_feed_page(driver):
-        feed_page = FeedPage(driver)
-        feed_page.get_feed_page()
+    feed_page = FeedPage(driver)
+    feed_page.get_feed_page()
 
 
 @pytest.fixture
-@allure.step('Получить значение счетчиков до офорлмения заказа')
+@allure.step("Получить значение счетчиков до офорлмения заказа")
 def get_counters_orders(driver, get_feed_page):
-        feed_page = FeedPage(driver)
-        total_counter = feed_page.get_total_counter()
-        today_counter = feed_page.get_today_counter()
-        return total_counter, today_counter
+    feed_page = FeedPage(driver)
+    total_counter = feed_page.get_total_counter()
+    today_counter = feed_page.get_today_counter()
+    return total_counter, today_counter
 
 
 @pytest.fixture
@@ -83,19 +83,22 @@ def register_data():
 
 @pytest.fixture
 def register_user_and_login(register_data, driver):
-    payload = {'name': register_data[0],
-               'password': TestData.password,
-               'email': register_data[1]}
+    payload = {
+        "name": register_data[0],
+        "password": TestData.password,
+        "email": register_data[1],
+    }
     response = UserApi().post_register(payload)
     r = response.json()
-    token = r['accessToken']
-    headers = {'Authorization': token}
+    token = r["accessToken"]
+    headers = {"Authorization": token}
     login_page = LoginPage(driver)
     login_page.login(register_data[1])
     main_page = MainPage(driver)
     main_page.wait_for_load_authorised_main_page()
     yield headers
     UserApi().delete_user(headers)
+
 
 @pytest.fixture
 def create_order(driver):
