@@ -1,0 +1,10 @@
+class UrlConfig:
+    DOMAIN = "https://stellarburgers.nomoreparties.site/"
+    RECOVERY_PASSWORD = "forgot-password"
+    LOGIN = "login"
+    ACCOUNT = "account/profile"
+    RESET_PASSWORD = "reset-password"
+    ORDER_HISTORY = "account/order-history"
+    FEED = "feed"
+    API_REGISTER = "api/auth/register"
+    API_USER = "api/auth/user"
