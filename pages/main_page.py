@@ -1,23 +1,15 @@
 import allure
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
-from ..helper import Helper
+from .base_page import BasePage
 from ..url_config import UrlConfig
 from ..locators import MainPageLocators
 
 
-class MainPage:
-    def __init__(self, driver):
-        self.driver = driver
+class MainPage(BasePage):
 
     def wait_for_load_authorised_main_page(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (MainPageLocators.ORDER_BUTTON)
-            )
-        )
+        self.wait_for_element_presented(MainPageLocators.ORDER_BUTTON)
 
     @allure.step('Нажать на кнопку перехода в раздел "Личный кабинет')
     def click_account_button(self):
@@ -29,21 +21,13 @@ class MainPage:
         self.driver.find_element(*MainPageLocators.ORDER_FEED).click()
 
     def wait_for_load_constructor_header(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (MainPageLocators.CONSTRUCTOR_HEADER)
-            )
-        )
+        self.wait_for_element_presented(MainPageLocators.CONSTRUCTOR_HEADER)
 
     def wait_for_ingredient_is_clickable(self):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.element_to_be_clickable((MainPageLocators.INGREDIENT))
-        )
+        self.wait_for_element_clickable(MainPageLocators.INGREDIENT)
 
     def wait_for_invisibility_cross_icon(self):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.invisibility_of_element((MainPageLocators.CROSS_ICON))
-        )
+        self.wait_for_element_not_presented(MainPageLocators.CROSS_ICON)
 
     @allure.step("Нажать на ингредиент")
     def click_ingredient(self):
@@ -51,17 +35,14 @@ class MainPage:
         self.driver.find_element(*MainPageLocators.INGREDIENT).click()
 
     def wait_for_pop_up_ingredient_visible(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (MainPageLocators.CROSS_ICON)
-            )
-        )
+        self.wait_for_element_presented(MainPageLocators.CROSS_ICON)
 
     @allure.step("Нажать на иконку крестика")
     def click_cross_icon(self):
         self.wait_for_pop_up_ingredient_visible()
         self.driver.find_element(*MainPageLocators.CROSS_ICON).click()
 
+    @allure.step("Перетащить ингредиент в корзину")
     def drug_and_drop_ingredient_to_cart(self):
         self.wait_for_ingredient_is_clickable()
         action = ActionChains(self.driver)
@@ -71,25 +52,13 @@ class MainPage:
         action.perform()
 
     def wait_for_change_basket_image(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.invisibility_of_element_located(
-                (MainPageLocators.BASKET_FREE_IMAGE)
-            )
-        )
+        self.wait_for_element_not_presented(MainPageLocators.BASKET_FREE_IMAGE)
 
     def wait_for_order_modal_displayed(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.visibility_of_element_located(
-                (MainPageLocators.ORDER_IDENTIFICATOR_MESSAGE)
-            )
-        )
+        self.wait_for_element_presented(MainPageLocators.ORDER_IDENTIFICATOR_MESSAGE)
 
     def wait_for_order_default_is_not_displayed(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.invisibility_of_element_located(
-                (MainPageLocators.ORDER_NUMBER_DEFAULT)
-            )
-        )
+        self.wait_for_element_not_presented(MainPageLocators.ORDER_NUMBER_DEFAULT)
 
     def click_order_button(self):
         self.wait_for_change_basket_image()
@@ -107,8 +76,9 @@ class MainPage:
         order_number = self.driver.find_element(*MainPageLocators.ORDER_NUMBER).text
         return order_number
 
+    @allure.step("Открыть главную страницу с конструктором")
     def get_main_page(self):
-        self.driver.get(UrlConfig.domain)
+        self.go_to_page(UrlConfig.DOMAIN)
         self.wait_for_load_authorised_main_page()
 
     @allure.step("Проверить, что pop up ингредиента отображается")
@@ -135,7 +105,7 @@ class MainPage:
     @allure.step("Проверить, что текущая страница главная")
     def check_current_url_main(self):
         self.wait_for_load_constructor_header()
-        assert Helper(self.driver).get_current_url() == UrlConfig.domain
+        assert self.get_current_url() == UrlConfig.DOMAIN
 
     @allure.step("Проверить сообщение на pop up нового заказа")
     def check_order_pop_up_message(self):

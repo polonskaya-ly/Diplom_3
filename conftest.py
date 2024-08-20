@@ -14,21 +14,21 @@ from .pages.reset_page import ResetPage
 from .url_config import UrlConfig
 
 
-@pytest.fixture(params=["chrome", "firefox"])
+@pytest.fixture(params=['chrome', 'firefox'])
 def driver(request):
-    if request.param == "chrome":
+    if request.param == 'chrome':
         driver = webdriver.Chrome()
-    elif request.param == "firefox":
+    elif request.param == 'firefox':
         driver = webdriver.Firefox()
     driver.maximize_window()
-    driver.get(UrlConfig.domain)
+    driver.get(UrlConfig.DOMAIN)
     request.cls.driver = driver
     yield driver
     driver.quit()
 
 
 @pytest.fixture
-@allure.step("Перейти на страницу ввода нового пароля")
+@allure.step('Перейти на страницу ввода нового пароля')
 def get_reset_page(driver):
     recovery_page = RecoveryPage(driver)
     recovery_page.get_recovery_page()
@@ -39,13 +39,13 @@ def get_reset_page(driver):
 
 
 @pytest.fixture
-def login(driver, email=TestData.email):
+def login(driver, email=TestData.EMAIL):
     login_page = LoginPage(driver)
     login_page.login(email)
 
 
 @pytest.fixture
-@allure.step("Перейти в личный кабинет")
+@allure.step('Перейти в личный кабинет')
 def move_to_account(driver, login):
     main_page = MainPage(driver)
     main_page.click_account_button()
@@ -63,10 +63,11 @@ def get_login_page(driver):
 def get_feed_page(driver):
     feed_page = FeedPage(driver)
     feed_page.get_feed_page()
+    feed_page.wait_for_load_feed_header()
 
 
 @pytest.fixture
-@allure.step("Получить значение счетчиков до офорлмения заказа")
+@allure.step('Получить значение счетчиков до офорлмения заказа')
 def get_counters_orders(driver, get_feed_page):
     feed_page = FeedPage(driver)
     total_counter = feed_page.get_total_counter()
@@ -76,8 +77,8 @@ def get_counters_orders(driver, get_feed_page):
 
 @pytest.fixture
 def register_data():
-    name = f"Любовь{random.randint(1000, 9999)}"
-    email = f"polonskaya{random.randint(1000, 9999)}@yandex.ru"
+    name = f'Любовь{random.randint(1000, 9999)}'
+    email = f'polonskaya{random.randint(1000, 9999)}@yandex.ru'
     return name, email
 
 
@@ -85,7 +86,7 @@ def register_data():
 def register_user_and_login(register_data, driver):
     payload = {
         "name": register_data[0],
-        "password": TestData.password,
+        "password": TestData.PASSWORD,
         "email": register_data[1],
     }
     response = UserApi().post_register(payload)

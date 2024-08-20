@@ -1,0 +1,1 @@
+{"uuid": "a240e014-6ab7-422e-83db-b5fc586d652c", "children": ["629e8b7a-afa5-4c7a-b7a5-6fa4ea59cdde"], "befores": [{"name": "get_feed_page", "status": "passed", "steps": [{"name": "Открыть страницу \"Лента заказов", "status": "passed", "start": 1724130526414, "stop": 1724130527027}], "start": 1724130526414, "stop": 1724130527038}], "start": 1724130526414, "stop": 1724130531640}

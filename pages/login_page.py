@@ -1,19 +1,15 @@
 import allure
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
-from ..helper import Helper
+from .base_page import BasePage
 from ..constants import TestData
 from ..url_config import UrlConfig
 from ..locators import LoginPageLocators
 
 
-class LoginPage:
-    def __init__(self, driver):
-        self.driver = driver
-
+class LoginPage(BasePage):
+    @allure.step('Открыть страницу "Авторизации')
     def get_login_page(self):
-        self.driver.get(UrlConfig.domain + UrlConfig.login_path)
+        self.go_to_page(UrlConfig.DOMAIN + UrlConfig.LOGIN)
 
     @allure.step('Нажать на кнопку "Восстановить')
     def click_recovery_password_button(self):
@@ -34,7 +30,7 @@ class LoginPage:
 
     def input_password_to_field(self):
         self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(
-            TestData.password
+            TestData.PASSWORD
         )
 
     def set_password_to_field(self):
@@ -45,12 +41,9 @@ class LoginPage:
         self.driver.find_element(*LoginPageLocators.LOGIN_BUTTON).click()
 
     def wait_for_login_header_is_displayed(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (LoginPageLocators.ENTER_HEADER)
-            )
-        )
+        self.wait_for_element_presented(LoginPageLocators.ENTER_HEADER)
 
+    @allure.step('Нажать на кнопку перехода в раздел "Конструктор"')
     def click_constructor_button(self):
         self.driver.find_element(*LoginPageLocators.CONSTRUCTOR).click()
 
@@ -64,7 +57,4 @@ class LoginPage:
     @allure.step("Проверить, что текущая страница - страница для входа в аккаунт")
     def check_current_url_is_login(self):
         self.wait_for_login_header_is_displayed()
-        assert (
-            Helper(self.driver).get_current_url()
-            == UrlConfig.domain + UrlConfig.login_path
-        )
+        assert self.get_current_url() == UrlConfig.DOMAIN + UrlConfig.LOGIN

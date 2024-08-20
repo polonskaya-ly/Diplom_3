@@ -9,7 +9,7 @@ from ..pages.login_page import LoginPage
 @pytest.mark.usefixtures("driver")
 class TestRecoverPassword:
     @allure.title(
-        "Переход на страницу восстановления пароля по кнопке «Восстановить пароль»"
+        'Переход на страницу восстановления пароля по кнопке "Восстановить пароль"'
     )
     def test_move_to_recovery_password_page(self):
         login_page = LoginPage(self.driver)
@@ -18,7 +18,7 @@ class TestRecoverPassword:
         recovery_page = RecoveryPage(self.driver)
         recovery_page.check_current_url_recovery_password()
 
-    @allure.title("Ввод почты и клик по кнопке «Восстановить»")
+    @allure.title('Ввод почты и клик по кнопке "Восстановить"')
     def test_move_to_reset_page(self):
         recovery_page = RecoveryPage(self.driver)
         recovery_page.get_recovery_page()

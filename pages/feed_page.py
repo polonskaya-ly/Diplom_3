@@ -1,36 +1,22 @@
-import time
-
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
-from ..helper import Helper
+from .base_page import BasePage
 from ..locators import FeedPageLocators
-
 from ..url_config import UrlConfig
 
 
-class FeedPage:
-    def __init__(self, driver):
-        self.driver = driver
+class FeedPage(BasePage):
 
     def wait_for_load_feed_header(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (FeedPageLocators.FEED_HEADER)
-            )
-        )
+        self.wait_for_element_presented(FeedPageLocators.FEED_HEADER)
 
     def wait_for_load_order_content(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (FeedPageLocators.ORDER_CONTENT)
-            )
-        )
+        self.wait_for_element_presented(FeedPageLocators.ORDER_CONTENT)
 
+    @allure.step('Открыть страницу "Лента заказов')
     def get_feed_page(self):
-        self.driver.get(UrlConfig.domain + UrlConfig.feed)
+        self.go_to_page(UrlConfig.DOMAIN + UrlConfig.FEED)
         self.wait_for_load_feed_header()
 
     @allure.step("Нажать на первый заказ в списке")
@@ -39,11 +25,7 @@ class FeedPage:
         self.driver.find_element(*FeedPageLocators.ORDER).click()
 
     def wait_for_work_status_changed(self):
-        WebDriverWait(self.driver, 20).until(
-            expected_conditions.invisibility_of_element_located(
-                (FeedPageLocators.READY_MESSAGE_FOR_ORDERS)
-            )
-        )
+        self.wait_for_element_not_presented(FeedPageLocators.READY_MESSAGE_FOR_ORDERS)
 
     @allure.step('Получить значение счетчика "Выполнено за все время"')
     def get_total_counter(self):
@@ -62,11 +44,13 @@ class FeedPage:
         today_counter = int(today_counter)
         return today_counter
 
-    def get_order_number_locator(self, order_number):
+    @staticmethod
+    def get_order_number_locator(order_number):
         order_number_locator = [By.XPATH, f'.//p[contains(text(), "{order_number}")]']
         return order_number_locator
 
-    def get_total_current_order_counter_locator(self, total_counter):
+    @staticmethod
+    def get_total_current_order_counter_locator(total_counter):
         total_order_counter_locator = [
             By.XPATH,
             f'.//p[contains(text(),"Выполнено за сегодня")]/'
@@ -74,7 +58,8 @@ class FeedPage:
         ]
         return total_order_counter_locator
 
-    def get_today_current_order_counter_locator(self, today_counter):
+    @staticmethod
+    def get_today_current_order_counter_locator(today_counter):
         total_order_counter_locator = [
             By.XPATH,
             f'.//p[contains(text(),"Выполнено за сегодня")]/'
@@ -83,17 +68,13 @@ class FeedPage:
         return total_order_counter_locator
 
     def wait_current_total_counter_is_not_visible(self, total_counter):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.invisibility_of_element_located(
-                (self.get_today_current_order_counter_locator(total_counter))
-            )
+        self.wait_for_element_not_presented(
+            self.get_today_current_order_counter_locator(total_counter)
         )
 
     def wait_current_today_counter_is_not_visible(self, today_counter):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.invisibility_of_element_located(
-                (self.get_today_current_order_counter_locator(today_counter))
-            )
+        self.wait_for_element_not_presented(
+            self.get_today_current_order_counter_locator(today_counter)
         )
 
     @allure.step('Проверить, что новый заказ отображается в колонке "В работе')
@@ -106,9 +87,7 @@ class FeedPage:
     @allure.step('Проверить, что текущая страница - страница "Лента заказов')
     def check_current_url_order_feed(self):
         self.wait_for_load_feed_header()
-        assert (
-            Helper(self.driver).get_current_url() == UrlConfig.domain + UrlConfig.feed
-        )
+        assert self.get_current_url() == UrlConfig.DOMAIN + UrlConfig.FEED
 
     @allure.step("Проверить, что детали заказа открылись в pop up")
     def check_order_details_is_displayed(self):

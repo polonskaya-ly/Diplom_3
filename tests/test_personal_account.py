@@ -9,14 +9,14 @@ from ..pages.main_page import MainPage
 
 @pytest.mark.usefixtures("driver")
 class TestPersonalAccount:
-    @allure.title("Переход по клику на «Личный кабинет»")
+    @allure.title('Переход по клику на "Личный кабинет"')
     def test_move_to_account_with_account_button(self, login):
         main_page = MainPage(self.driver)
         main_page.click_account_button()
         account_page = AccountPage(self.driver)
         account_page.check_current_url_profile_account()
 
-    @allure.title("Переход в раздел «История заказов»")
+    @allure.title('Переход в раздел "История заказов"')
     def test_move_to_order_history(self, login, move_to_account):
         account_page = AccountPage(self.driver)
         account_page.click_history_button()

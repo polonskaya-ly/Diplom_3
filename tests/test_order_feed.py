@@ -9,7 +9,7 @@ from ..pages.feed_page import FeedPage
 
 @pytest.mark.usefixtures("driver")
 class TestOrderFeed:
-    @allure.title("Открытие pop up с деталями заказа по клику на зака")
+    @allure.title("Открытие pop up с деталями заказа по клику на заказ")
     def test_pop_up_order_details(self, get_feed_page):
         feed_page = FeedPage(self.driver)
         feed_page.click_order()
@@ -35,7 +35,7 @@ class TestOrderFeed:
         feed_page.check_today_counter_after_created_order(get_counters_orders[1])
 
     @allure.title(
-        "Заказы пользователя из раздела «История заказов» отображаются на странице «Лента заказов»"
+        'Заказы пользователя из раздела «История заказов» отображаются на странице "Лента заказов"'
     )
     def test_order_feed_include_order_history_user(
         self, register_user_and_login, create_order

@@ -1,23 +1,15 @@
 import allure
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
-from ..helper import Helper
+from .base_page import BasePage
 from ..locators import ResetPageLocators
 
 from ..url_config import UrlConfig
 
 
-class ResetPage:
-    def __init__(self, driver):
-        self.driver = driver
+class ResetPage(BasePage):
 
     def wait_for_load_password_field(self):
-        WebDriverWait(self.driver, 3).until(
-            expected_conditions.visibility_of_element_located(
-                (ResetPageLocators.PASSWORD_FIELD)
-            )
-        )
+        self.wait_for_element_presented(ResetPageLocators.PASSWORD_FIELD)
 
     @allure.step("Нажать на иконку глаза")
     def click_password_eye(self):
@@ -26,10 +18,7 @@ class ResetPage:
     @allure.step("Проверить, что текущая страница - страница для ввода нового пароля")
     def check_current_url_reset_password(self):
         self.wait_for_load_password_field()
-        assert (
-            Helper(self.driver).get_current_url()
-            == UrlConfig.domain + UrlConfig.reset_password_path
-        )
+        assert self.get_current_url() == UrlConfig.DOMAIN + UrlConfig.RESET_PASSWORD
 
     @allure.step("Проверить, что поле ввода пароля стало активным")
     def check_password_field_active(self):

@@ -1,0 +1,1 @@
+{"uuid": "0427b25e-679e-4505-8257-851c8b531b7c", "children": ["422a9061-644e-42a1-9401-7c44bd938e3d"], "befores": [{"name": "get_login_page", "status": "passed", "steps": [{"name": "Открыть страницу \"Авторизации", "status": "passed", "start": 1724130454653, "stop": 1724130454938}], "start": 1724130454653, "stop": 1724130454938}], "start": 1724130454653, "stop": 1724130455057}

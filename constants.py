@@ -1,4 +1,4 @@
 class TestData:
-    email = "polonskaya777777@yandex.ru"
-    password = "222222"
-    invalid_password = "22222"
+    EMAIL = "polonskaya777777@yandex.ru"
+    PASSWORD = "222222"
+    # INVALID_PASSWORD = "22222"
